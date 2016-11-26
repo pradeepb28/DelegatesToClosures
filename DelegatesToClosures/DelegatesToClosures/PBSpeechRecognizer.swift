@@ -9,7 +9,7 @@
 import UIKit
 import Speech
 
-class SpeechRecognizer: SFSpeechRecognizer, SFSpeechRecognitionTaskDelegate, SFSpeechRecognizerDelegate {
+class PBSpeechRecognizer: SFSpeechRecognizer, SFSpeechRecognitionTaskDelegate, SFSpeechRecognizerDelegate {
     
     private var availabilityDidChange                      : (SFSpeechRecognizer, Bool) -> ()?
     private var speechRecognitionDetection                 : (SFSpeechRecognitionTask) -> ()?
@@ -19,7 +19,7 @@ class SpeechRecognizer: SFSpeechRecognizer, SFSpeechRecognitionTaskDelegate, SFS
     private var speechRecognitionFinishedReadingAudio      : (SFSpeechRecognitionTask) -> ()?
     private var speechRecognitionFinishSuccessfully        : (SFSpeechRecognitionTask, Bool) -> ()?
     
-    init(locale: Locale,
+    init(localeString: String,
          checkAvailability: @escaping (Bool) -> (),
          requestAuthorizationStatus: @escaping (SFSpeechRecognizerAuthorizationStatus) -> (),
          availabilityDidChange: @escaping (SFSpeechRecognizer, Bool) -> (),
@@ -37,13 +37,13 @@ class SpeechRecognizer: SFSpeechRecognizer, SFSpeechRecognitionTaskDelegate, SFS
         self.speechRecognitionHypothesizeTranscription  = speechRecognitionHypothesizeTranscription
         self.speechRecognitionFinishedReadingAudio      = speechRecognitionFinishedReadingAudio
         self.speechRecognitionFinishSuccessfully        = speechRecognitionFinishSuccessfully
-        super.init(locale: locale)!
+        super.init(locale: Locale(identifier: localeString))!
         
         delegate = self
         
         checkAvailability(isAvailable)
         
-        SpeechRecognizer.requestAuthorization { (status) in
+        PBSpeechRecognizer.requestAuthorization { (status) in
             requestAuthorizationStatus(status)
         }
     }
