@@ -41,10 +41,26 @@ class PBSpeechRecognizer: SFSpeechRecognizer, SFSpeechRecognitionTaskDelegate, S
         
         delegate = self
         
+        readKeys()
+        
         checkAvailability(isAvailable)
         
         PBSpeechRecognizer.requestAuthorization { (status) in
             requestAuthorizationStatus(status)
+        }
+    }
+    
+    private func readKeys() {
+        guard  let pList = Bundle.main.path(forResource: "Info", ofType: "plist") else { fatalError("Unable to find Info.plist") }
+        
+        let pListDictionary = NSDictionary(contentsOfFile: pList)
+        
+        guard pListDictionary?["NSMicrophoneUsageDescription"] != nil else {
+            fatalError("NSMicrophoneUsageDescription is not configured in Info.plist")
+        }
+        
+        guard pListDictionary?["NSSpeechRecognitionUsageDescription"] != nil else {
+            fatalError("NSSpeechRecognitionUsageDescription is not configured in Info.plist")
         }
     }
     
